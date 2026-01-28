@@ -10,14 +10,22 @@
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/scripts/test/test_nuplan.py",
+            // "program": "${workspaceFolder}/scripts/test/test_nuscenes.py",
             "console": "integratedTerminal",
             "args": [
                 "--exp_name", "test-nuplan",
                 "--start_id", "0",
                 "--end_id", "100",
-                "--resume_path", "pretrained/epona_nuplan.pkl",
-                "--config", "configs/dit_config_dcae_nuplan.py"
+                "--resume_path", "${workspaceFolder}/pretrained/epona_nuplan.pkl",
+                "--config", "${workspaceFolder}/configs/dit_config_dcae_nuplan.py"
             ],
+            // "args": [
+            //     "--exp_name", "test-nusc",
+            //     "--start_id", "0",
+            //     "--end_id", "100",
+            //     "--resume_path", "${workspaceFolder}/pretrained/epona_nuplan+nusc.pkl",
+            //     "--config", "${workspaceFolder}/configs/dit_config_dcae_nuscenes.py"
+            // ],
             "cwd": "${workspaceFolder}",
             "python": "/root/miniconda3/envs/epona-env/bin/python", 
             "env": {
