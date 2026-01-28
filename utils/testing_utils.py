@@ -83,15 +83,36 @@ def create_mp4_imgs(args, imgs, video_save_path, border_size = 10, fps=2, name="
 
     if not os.path.exists(video_save_path):
         os.makedirs(video_save_path)
+    # 初始化CV2视频写入器（核心修改点1）
+    video_writer = None
+    if imgs:
+        # 获取第一帧尺寸（计算加边框后的视频尺寸）
+        h, w = imgs[0].shape[:2]
+        video_size = (w + 2 * border_size, h + 2 * border_size)
+        # MP4编码格式，兼容所有环境
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        video_file_path = os.path.join(video_save_path, f'video{name}.mp4')
+        video_writer = cv2.VideoWriter(video_file_path, fourcc, fps, video_size)
+    else:
+        print("⚠️ 没有可处理的图像帧，退出视频生成")
+        return
 
-    with imageio.get_writer(os.path.join(video_save_path, 'video'+name+'.mp4'), mode='I', fps=fps) as writer:
-        for j, image_file in enumerate(imgs):
-            if j < condition_frames:
-                bordered_img = add_border(image_file, border_size=border_size)
-            else:
-                bordered_img = add_border(image_file, border_size=border_size, value=[0, 0, 255])
-            # cv2.imwrite(os.path.join(video_save_path, '%d.png'%(j)), bordered_img)
-            writer.append_data(bordered_img[:, :, ::-1])
+    for j, image_file in enumerate(imgs):
+        if j < condition_frames:
+            bordered_img = add_border(image_file, border_size=border_size)
+        else:
+            bordered_img = add_border(image_file, border_size=border_size, value=[0, 0, 255])
+        cv2.imwrite(os.path.join(video_save_path, '%d.png'%(j)), bordered_img)
+        if bordered_img[:, :, ::-1] is None:
+            print(f"⚠️  跳过损坏的图片：{j}")
+            continue
+        # writer.append_data(bordered_img[:, :, ::-1])
+        # 写入视频帧（核心修改点2）
+        video_writer.write(bordered_img)
+        # 释放视频写入器资源（核心修改点3）
+    if video_writer is not None:
+        video_writer.release()
+        print(f"✅ 视频生成完成，路径：{video_file_path}")
 
 def set_text(image, pose):
     # pose: string

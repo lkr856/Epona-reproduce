@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "Python Debugger: Current File with Arguments",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/scripts/test/test_nuplan.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--exp_name", "test-nuplan",
+                "--start_id", "0",
+                "--end_id", "100",
+                "--resume_path", "pretrained/epona_nuplan.pkl",
+                "--config", "configs/dit_config_dcae_nuplan.py"
+            ],
+            "cwd": "${workspaceFolder}",
+            "python": "/root/miniconda3/envs/epona-env/bin/python", 
+            "env": {
+             "PYTHONPATH": "${workspaceFolder}"
+            }
+        }
+    ]
+}

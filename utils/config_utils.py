@@ -12,6 +12,7 @@ import tempfile
 import types
 import uuid
 import warnings
+import re
 from argparse import Action, ArgumentParser, Namespace
 from collections import OrderedDict, abc
 from contextlib import contextmanager
@@ -1333,7 +1334,7 @@ class Config:
             )
 
         filename = osp.abspath(osp.expanduser(filename))
-        check_file_exist(filename)
+        # check_file_exist(filename)
         fileExtname = osp.splitext(filename)[1]
         if fileExtname not in ['.py', '.json', '.yaml', '.yml']:
             raise OSError('Only py/yml/yaml/json type are supported now!')
@@ -1395,8 +1396,8 @@ class Config:
                 if filename.endswith('.py'):
                     with open(temp_config_file.name, encoding='utf-8') as f:
                         parsed_codes = ast.parse(f.read())
-                        parsed_codes = RemoveAssignFromAST(BASE_KEY).visit(
-                            parsed_codes)
+                        # parsed_codes = RemoveAssignFromAST(BASE_KEY).visit(
+                        #     parsed_codes)
                     codeobj = compile(parsed_codes, filename, mode='exec')
                     # Support load global variable in nested function of the
                     # config.
